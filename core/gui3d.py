@@ -603,7 +603,7 @@ class Application(events3d.EventHandler):
         if self.mouseDownObject:
             self.mouseDownObject.callEvent('onMouseUp', event)
             if self.mouseDownObject is object:
-                print "crazylog - -clicked object -"
+                # print "crazylog - -clicked object -"
                 self.mouseDownObject.callEvent('onClicked', event)
 
     def onMouseMovedCallback(self, event):

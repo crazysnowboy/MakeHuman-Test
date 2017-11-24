@@ -42,7 +42,7 @@ import numpy as np
 import unique # Bugfix for numpy.unique on older numpy versions
 
 import material
-
+from core import G
 class FaceGroup(object):
     """
     A FaceGroup (a group of faces with a unique name).
@@ -140,6 +140,8 @@ class Object3D(object):
         the link by setting other.object to None before attaching it to a new
         object.
         """
+        filterMaskedVerts=False
+        print "-----crazylog-------------clone-------------------name = ",self.name
         if self.getFaceCount(excludeMaskedFaces=filterMaskedVerts) == 0:
             raise RuntimeError("Error cloning mesh %s. Cannot clone a mesh with 0 (unmasked) faces!", self.name)
 
@@ -156,20 +158,37 @@ class Object3D(object):
             else:
                 ofg.color = fg.color
 
+
+
         if filterMaskedVerts:
             self.filterMaskedVerts(other, update=False)
             if scale != 1:
                 other.coord = scale * other.coord
         else:
+
+            test = self.texco[self.fuvs]
+            print "----crazy--test--=",test
+
             other.setCoords(scale * self.coord)
             other.setColor(self.color.copy())
             other.setUVs(self.texco.copy())
             other.setFaces(self.fvert.copy(), self.fuvs.copy(), self.group.copy())
             other.changeFaceMask(self.face_mask.copy())
 
-        print "----crazy--error------1------------------"
-        # other.calcNormals()
-        # other.updateIndexBuffer()
+        # print "----crazy--error------1------------------"
+        # j=0
+        # for obj in sorted(G.world, key=(lambda obj: obj.priority)):
+        #     print "---------crazy-drawMeshes-----[",j,"]-----obj type = ", type(obj)
+        #     print "---------crazy-drawMeshes-----[",j,"]-----G.world type = ", type(G.world[j])
+        #
+        #     print "obj.verts = ", obj.verts.shape
+        #     print "obj.norms = ", obj.norms.shape
+        #     print "obj.UVs = ", obj.UVs.shape
+        #
+        #     j+=1
+
+        other.calcNormals()
+        other.updateIndexBuffer()
 
         return other
 
@@ -756,21 +775,46 @@ class Object3D(object):
         self.updateIndexBufferFaces()
 
     def updateIndexBufferVerts(self):
+
+        print "-------crazy-----------self.fvert shape = ",self.fvert.shape
+        print "-------crazy-----------self.fvert = ", self.fvert
+
+        print "-------crazy-----------self.fuvs shape = ",self.fuvs.shape
+        print "-------crazy-----------self.fuvs = ", self.fuvs
+
+        print "-------crazy-----------self.texco = ",  type(self.texco)
+
+        if hasattr(self.texco,"shape"):
+            test = self.texco[self.fuvs.astype(np.uint32)]
+
         packed = self.fvert.astype(np.uint64) << 32
         packed |= self.fuvs
+
+
         packed = packed.reshape(-1)
+        print "-------crazy-----------packed.shape = ",packed.shape
 
         u, rev = np.unique(packed, return_inverse=True)
+        print "-------crazy-----------u.shape = ", u.shape
+        print "-------crazy-----------rev.shape = ", rev.shape
         del packed
 
+        print "-------crazy----------- u = ",u
         unwelded = u[:,None] >> np.array([[32,0]], dtype=np.uint64)
         unwelded = unwelded.astype(np.uint32)
+        print "-------crazy-----------unwelded.shape = ", unwelded.shape
+        print "-------crazy-----------unwelded = ", unwelded
+
+
         nverts = len(unwelded)
         iverts = rev.reshape(self.fvert.shape)
         del rev, u
 
         self.vmap = unwelded[:,0]
+
         self.tmap = unwelded[:,1]
+
+        print "-------crazy-----------self.tmap = ",self.tmap.shape
         self._inverse_vmap = None
         del unwelded
 
@@ -867,6 +911,7 @@ class Object3D(object):
         if self.tmap is None or len(self.tmap) == 0:
             return
         if self.utexc is True:
+            print "self.texco shape = ",self.texco.shape
             self.r_texco[...] = self.texco[self.tmap]
         else:
             self.r_texco[self.utexc[self.tmap]] = self.texco[self.tmap][self.utexc[self.tmap]]
@@ -1253,8 +1298,8 @@ class Object3D(object):
         if recalcVertexNormals:
             self.calcVertexNormals(verticesToUpdate)
 
-        if recalcFaceNormals or recalcVertexNormals and self.calculateTangents:
-            self.calcVertexTangents(verticesToUpdate)
+        # if recalcFaceNormals or recalcVertexNormals and self.calculateTangents:
+        #     self.calcVertexTangents(verticesToUpdate)
                 
     def calcBBox(self, ix=None, onlyVisible = True, fixedFaceMask = None):
         """

@@ -511,7 +511,7 @@ def createSubdivisionObject(object, staticFaceMask=None):
     obj = SubdivisionObject(object, staticFaceMask)
 
     print "----crazy--error------2------------------"
-    # obj.create()
+    obj.create()
     return obj
 
 def updateSubdivisionObject(object):
