@@ -1,6 +1,8 @@
 glmodule:
     def drawMesh(obj)
 
+module3d.py
+        def clone(self, scale=1.0, filterMaskedVerts=False):    # TODO it's also possible to add offset to the parameters
 
 
 plugins_error:

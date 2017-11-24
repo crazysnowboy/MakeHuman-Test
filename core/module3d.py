@@ -141,7 +141,7 @@ class Object3D(object):
         object.
         """
         filterMaskedVerts=False
-        print "-----crazylog-------------clone-------------------name = ",self.name
+        # print "-----crazylog-------------clone-------------------name = ",self.name
         if self.getFaceCount(excludeMaskedFaces=filterMaskedVerts) == 0:
             raise RuntimeError("Error cloning mesh %s. Cannot clone a mesh with 0 (unmasked) faces!", self.name)
 
@@ -166,8 +166,8 @@ class Object3D(object):
                 other.coord = scale * other.coord
         else:
 
-            test = self.texco[self.fuvs]
-            print "----crazy--test--=",test
+            # test = self.texco[self.fuvs]
+            # print "----crazy--test--=",test
 
             other.setCoords(scale * self.coord)
             other.setColor(self.color.copy())
@@ -776,34 +776,34 @@ class Object3D(object):
 
     def updateIndexBufferVerts(self):
 
-        print "-------crazy-----------self.fvert shape = ",self.fvert.shape
-        print "-------crazy-----------self.fvert = ", self.fvert
+        # print "-------crazy-----------self.fvert shape = ",self.fvert.shape
+        # print "-------crazy-----------self.fvert = ", self.fvert
+        #
+        # print "-------crazy-----------self.fuvs shape = ",self.fuvs.shape
+        # print "-------crazy-----------self.fuvs = ", self.fuvs
+        #
+        # print "-------crazy-----------self.texco = ",  type(self.texco)
 
-        print "-------crazy-----------self.fuvs shape = ",self.fuvs.shape
-        print "-------crazy-----------self.fuvs = ", self.fuvs
-
-        print "-------crazy-----------self.texco = ",  type(self.texco)
-
-        if hasattr(self.texco,"shape"):
-            test = self.texco[self.fuvs.astype(np.uint32)]
+        # if hasattr(self.texco,"shape"):
+        #     test = self.texco[self.fuvs.astype(np.uint32)]
 
         packed = self.fvert.astype(np.uint64) << 32
         packed |= self.fuvs
 
 
         packed = packed.reshape(-1)
-        print "-------crazy-----------packed.shape = ",packed.shape
+        # print "-------crazy-----------packed.shape = ",packed.shape
 
         u, rev = np.unique(packed, return_inverse=True)
-        print "-------crazy-----------u.shape = ", u.shape
-        print "-------crazy-----------rev.shape = ", rev.shape
+        # print "-------crazy-----------u.shape = ", u.shape
+        # print "-------crazy-----------rev.shape = ", rev.shape
         del packed
 
-        print "-------crazy----------- u = ",u
+        # print "-------crazy----------- u = ",u
         unwelded = u[:,None] >> np.array([[32,0]], dtype=np.uint64)
         unwelded = unwelded.astype(np.uint32)
-        print "-------crazy-----------unwelded.shape = ", unwelded.shape
-        print "-------crazy-----------unwelded = ", unwelded
+        # print "-------crazy-----------unwelded.shape = ", unwelded.shape
+        # print "-------crazy-----------unwelded = ", unwelded
 
 
         nverts = len(unwelded)
@@ -814,7 +814,7 @@ class Object3D(object):
 
         self.tmap = unwelded[:,1]
 
-        print "-------crazy-----------self.tmap = ",self.tmap.shape
+        # print "-------crazy-----------self.tmap = ",self.tmap.shape
         self._inverse_vmap = None
         del unwelded
 
