@@ -42,7 +42,7 @@ import gui3d
 import gui
 import log
 import numpy as np
-
+from core import G
 
 #
 #   Clothes
@@ -70,6 +70,8 @@ class ClothesTaskView(proxychooser.ProxyChooserTaskView):
 
         self.oldPxyMats = {}
         self.blockFaceMasking = False
+
+        G.ClothesTaskView.append(self)
 
     def createFileChooser(self):
         self.optionsBox = self.addLeftWidget(gui.GroupBox('Options'))

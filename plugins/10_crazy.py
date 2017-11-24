@@ -3,6 +3,7 @@
 
 import gui3d
 import mh
+import proxy
 import gui
 from gui import QtGui
 from core import G
@@ -13,11 +14,11 @@ class CrazyTaskView(gui3d.TaskView):
 
         Box1 = self.addLeftWidget(gui.GroupBox('Crazy1'))
         self.Button11 = Box1.addWidget(gui.Button("Crazy11"))
-        self.Button12 = Box1.addWidget(gui.Button("Crazy12"))
-        self.Button13 = Box1.addWidget(gui.Button("Crazy13"))
+        self.ClothModifier = Box1.addWidget(gui.Button("ClothModifier"))
+        self.SetWeight = Box1.addWidget(gui.Button("SetWeight"))
 
         Box2 = self.addLeftWidget(gui.GroupBox('Crazy2'))
-        self.Button21 = Box2.addWidget(gui.Button("Crazy21"))
+        self.SetView = Box2.addWidget(gui.Button("SetView"))
         self.Button22 = Box2.addWidget(gui.Button("Crazy22"))
 
         @self.Button11.mhEvent
@@ -37,6 +38,7 @@ class CrazyTaskView(gui3d.TaskView):
                 print "mv[",i,"]  = ", mv
 
             print "G.canvas  = ", G.canvas
+            print "G.canvas  dir = ", dir(G.canvas)
 
             j = 0
             for module3d_obj in sorted(G.Crazy, key=(lambda module3d_obj: module3d_obj.priority)):
@@ -49,34 +51,47 @@ class CrazyTaskView(gui3d.TaskView):
                 print "module3d_obj.group = ", module3d_obj.group.shape
                 j += 1
 
-        @self.Button12.mhEvent
+        @self.ClothModifier.mhEvent
         def onClicked(event):
-            print "-----crazy-button-12-----------"
+            print "-----crazy-ClothModifier-----------"
             mhmain_MHApplication =G.app
-            cloth_modifier = mhmain_MHApplication.modules['3_libraries_clothes_chooser']
-            print "---crazylog--plugins-----",dir(cloth_modifier)
+            human = mhmain_MHApplication.selectedHuman
+            # cloth_modifier = mhmain_MHApplication.modules['3_libraries_clothes_chooser']
 
-        @self.Button13.mhEvent
+            cloth_modifier = G.ClothesTaskView[0]
+
+            mhclofile = "data/clothes/male_casualsuit02/male_casualsuit02.mhpxy"
+            pxy = proxy.loadProxy(human, mhclofile)
+
+            human.addClothesProxy(pxy)
+
+
+        @self.SetWeight.mhEvent
         def onClicked(event):
 
             mhmain_MHApplication = G.app
             human = mhmain_MHApplication.selectedHuman
 
-            print "crazylog ----------------human = ",dir(human)
+            # print "crazylog ----------------human = ",dir(human)
 
-            human.setWeight(200)
+            object3d = human.mesh
+
+            print "crazylog ----------------object3d = ",object3d
+
+            # human.setWeight(200)
+            # pos = [10,10,10]
+            # human.setPosition(pos)
 
 
-        @self.Button21.mhEvent
+        @self.SetView.mhEvent
         def onClicked(event):
-            print "-----crazy-button-21-----------"
+            print "-----SetView----------"
             mhmain_MHApplication =G.app
             mhmain_MHApplication.axisView([0.0, 90.0, 0.0])
         @self.Button22.mhEvent
         def onClicked(event):
             print "-----crazy-button-22-----------"
-            mhmain_MHApplication =G.app
-            mhmain_MHApplication.axisView([90.0, 0.0, 0.0])
+
 
 
 

@@ -128,7 +128,6 @@ class Object3D(object):
 
         self.__object = None
 
-        G.Crazy.append(self)
 
     def clone(self, scale=1.0, filterMaskedVerts=False):    # TODO it's also possible to add offset to the parameters
         """

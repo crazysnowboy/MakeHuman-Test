@@ -41,11 +41,11 @@ class Globals(object):
         self.app = None
         self.args = {}
         self.world = []
-        self.Crazy = []
         self.cameras = []
         self.canvas = None
         self.windowHeight = 600
         self.windowWidth = 800
         self.clearColor = (0.0, 0.0, 0.0, 0.0)
+        self.ClothesTaskView = []
 
 G = Globals()

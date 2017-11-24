@@ -564,6 +564,8 @@ class Application(events3d.EventHandler):
         # Get picked object
         pickedObject = self.getSelectedFaceGroupAndObject()
 
+        print "--crazy---------pickedObject = ",pickedObject
+
         # Do not allow picking detached objects (in case of stale picking buffer)
         if pickedObject and hasattr(pickedObject, 'view') and not pickedObject.view:
             pickedObject = None
