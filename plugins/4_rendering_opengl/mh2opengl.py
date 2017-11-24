@@ -120,5 +120,6 @@ def Render(settings):
     progress(1, None, 'Rendering complete')
 
     gui3d.app.getCategory('Rendering').getTaskByName('Viewer').setImage(img)
+
     mh.changeTask('Rendering', 'Viewer')
     gui3d.app.statusPersist('Rendering complete')

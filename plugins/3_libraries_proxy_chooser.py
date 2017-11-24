@@ -93,6 +93,8 @@ class ProxyTaskView(proxychooser.ProxyChooserTaskView):
         """
         Called when a new proxy has been selected.
         """
+
+        print "crazylog-----------selectProxy------mhclofile = ",mhclofile
         if not mhclofile:
             self.deselectProxy(None, suppressSignal = True)
 

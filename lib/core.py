@@ -41,6 +41,7 @@ class Globals(object):
         self.app = None
         self.args = {}
         self.world = []
+        self.Crazy = []
         self.cameras = []
         self.canvas = None
         self.windowHeight = 600

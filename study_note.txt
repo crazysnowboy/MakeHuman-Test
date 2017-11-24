@@ -9,3 +9,6 @@ plugins_error:
     Geometries:
         Topologies
 
+human.py
+    modlling
+

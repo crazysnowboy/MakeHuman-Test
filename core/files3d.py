@@ -183,6 +183,7 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
       *uint* Number of faces per vertex (pole), None for default (min 4)
     """
     name = os.path.basename(path)
+    print "----crazylog------loadMesh--name= ",name,"path = ",path
     if obj is None:
         obj = module3d.Object3D(name)
     if maxFaces:

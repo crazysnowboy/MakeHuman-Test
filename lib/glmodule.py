@@ -1003,16 +1003,7 @@ def drawMeshes(pickMode, productionRender = False):
     G.cameras[0].updated = False
 
     # Draw all objects contained by G.world
-    j=0
     for obj in sorted(G.world, key = (lambda obj: obj.priority)):
-        # print "---------crazy-drawMeshes-----[",j,"]-----obj type = ", type(obj)
-        # print "---------crazy-drawMeshes-----[",j,"]-----G.world type = ", type(G.world[j])
-        #
-        # print "obj.verts = ", obj.verts.shape
-        # print "obj.norms = ", obj.norms.shape
-        # print "obj.UVs = ", obj.UVs.shape
-
-        j+=1
         if productionRender and obj.excludeFromProduction:
             continue
         camera = G.cameras[obj.cameraMode]

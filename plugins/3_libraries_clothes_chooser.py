@@ -56,12 +56,15 @@ class ClothesTaskView(proxychooser.ProxyChooserTaskView):
         self.faceHidingTggl = self.optionsBox.addWidget(FaceHideCheckbox("Hide faces under clothes"))
         @self.faceHidingTggl.mhEvent
         def onClicked(event):
+            print "crazylog---------------------onClicked----------------------"
             self.updateFaceMasks(self.faceHidingTggl.selected)
         @self.faceHidingTggl.mhEvent
         def onMouseEntered(event):
+            print "crazylog---------------------onMouseEntered----------------------"
             self.visualizeFaceMasks(True)
         @self.faceHidingTggl.mhEvent
         def onMouseExited(event):
+            print "crazylog---------------------onMouseExited----------------------"
             self.visualizeFaceMasks(False)
         self.faceHidingTggl.setSelected(True)
 
@@ -76,16 +79,19 @@ class ClothesTaskView(proxychooser.ProxyChooserTaskView):
         return 10
 
     def proxySelected(self, pxy):
+        print "crazylog---------------------proxySelected----------------------pxy= ",pxy
         self.human.addClothesProxy(pxy)
         self.updateFaceMasks(self.faceHidingTggl.selected)
 
     def proxyDeselected(self, pxy, suppressSignal = False):
+        print "crazylog---------------------proxyDeselected----------------------"
         uuid = pxy.uuid
         self.human.removeClothesProxy(uuid)
         if not suppressSignal:
             self.updateFaceMasks(self.faceHidingTggl.selected)
 
     def resetSelection(self):
+        print "crazylog----------------------resetSelection---------------------"
         super(ClothesTaskView, self).resetSelection()
         self.updateFaceMasks(self.faceHidingTggl.selected)
 
@@ -103,6 +109,7 @@ class ClothesTaskView(proxychooser.ProxyChooserTaskView):
         Apply facemask (deleteVerts) defined on clothes to body and lower layers
         of clothing. Uses order as defined in self.clothesList.
         """
+        print "crazylog----------------------updateFaceMasks---------------------"
         if self.blockFaceMasking:
             return
 
