@@ -327,6 +327,7 @@ class Object3D(object):
             return
 
         # Create an Object3D for the mesh
+        print "crazy----------mesh = ",mesh
         mesh.object3d = cls(mesh)
         G.world.append(mesh.object3d)
 

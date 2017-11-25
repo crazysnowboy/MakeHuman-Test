@@ -1,10 +1,11 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
-
+import numpy as np
 import gui3d
 import mh
 import proxy
 import gui
+import module3d
 from gui import QtGui
 from core import G
 class CrazyTaskView(gui3d.TaskView):
@@ -19,7 +20,7 @@ class CrazyTaskView(gui3d.TaskView):
 
         Box2 = self.addLeftWidget(gui.GroupBox('Crazy2'))
         self.SetView = Box2.addWidget(gui.Button("SetView"))
-        self.Button22 = Box2.addWidget(gui.Button("Crazy22"))
+        self.ShowInfo = Box2.addWidget(gui.Button("ShowInfo"))
 
         @self.Button11.mhEvent
         def onClicked(event):
@@ -40,31 +41,27 @@ class CrazyTaskView(gui3d.TaskView):
             print "G.canvas  = ", G.canvas
             print "G.canvas  dir = ", dir(G.canvas)
 
-            j = 0
-            for module3d_obj in sorted(G.Crazy, key=(lambda module3d_obj: module3d_obj.priority)):
-                print "---------crazy-drawMeshes-----[", j, "]-----module3d_obj type = ", type(module3d_obj)
-                print "---------crazy-drawMeshes-----[", j, "]-----G.world type = ", type(G.Crazy[j])
 
-                print "module3d_obj.fvert = ", module3d_obj.fvert.shape
-                print "module3d_obj.fnorm = ", module3d_obj.fnorm.shape
-                print "module3d_obj.fuvs = ", module3d_obj.fuvs.shape
-                print "module3d_obj.group = ", module3d_obj.group.shape
-                j += 1
 
         @self.ClothModifier.mhEvent
         def onClicked(event):
             print "-----crazy-ClothModifier-----------"
             mhmain_MHApplication =G.app
             human = mhmain_MHApplication.selectedHuman
-            # cloth_modifier = mhmain_MHApplication.modules['3_libraries_clothes_chooser']
-
-            cloth_modifier = G.ClothesTaskView[0]
+            cloth_modifier = mhmain_MHApplication.modules['3_libraries_clothes_chooser']
 
             mhclofile = "data/clothes/male_casualsuit02/male_casualsuit02.mhpxy"
             pxy = proxy.loadProxy(human, mhclofile)
 
-            human.addClothesProxy(pxy)
+            j = 0
+            for obj in sorted(G.world, key=(lambda obj: obj.priority)):
+                print "---------crazy-drawMeshes-----[", j, "]-----module3d_obj type = ", type(obj)
 
+                print "module3d_obj.fvert = ", obj.fvert.shape
+                print "module3d_obj.fnorm = ", obj.fnorm.shape
+                print "module3d_obj.fuvs = ", obj.fuvs.shape
+                print "module3d_obj.group = ", obj.group.shape
+                j += 1
 
         @self.SetWeight.mhEvent
         def onClicked(event):
@@ -74,11 +71,11 @@ class CrazyTaskView(gui3d.TaskView):
 
             # print "crazylog ----------------human = ",dir(human)
 
-            object3d = human.mesh
+            # object3d = human.mesh
+            #
+            # print "crazylog ----------------object3d = ",object3d
 
-            print "crazylog ----------------object3d = ",object3d
-
-            # human.setWeight(200)
+            human.setWeight(200)
             # pos = [10,10,10]
             # human.setPosition(pos)
 
@@ -88,11 +85,64 @@ class CrazyTaskView(gui3d.TaskView):
             print "-----SetView----------"
             mhmain_MHApplication =G.app
             mhmain_MHApplication.axisView([0.0, 90.0, 0.0])
-        @self.Button22.mhEvent
+        @self.ShowInfo.mhEvent
         def onClicked(event):
             print "-----crazy-button-22-----------"
 
+            mhmain_MHApplication = G.app
+            human = mhmain_MHApplication.selectedHuman
+            obj = human.mesh
+            print "human.mesh = ",obj
+            print "human.mesh.object3d = ", obj.object3d
+            k=0
+            for obj in sorted(G.world, key=(lambda obj: obj.priority)):
+                k+=1
+                obj = obj.parent
+                print "obj[",k,"] = ",obj, "name =",obj.name
 
+                if "base" in obj.name or "suit" in obj.name:
+
+                    print "obj.coord.shape = ", obj.coord.shape
+                    print "obj.vnorm.shape = ", obj.vnorm.shape
+                    print "obj.vtang.shape = ", obj.vtang.shape
+                    print "obj.color.shape = ", obj.color.shape
+                    print "obj.vface.shape = ", obj.vface.shape
+                    print "obj.nfaces.shape = ", obj.nfaces.shape
+
+
+                    print "obj.texco.shape = ", obj.texco.shape
+                    print "obj.utexc.shape = ", obj.utexc
+
+
+                    print "obj.fvert.shape = ", obj.fvert.shape
+                    print "obj.fnorm.shape = ", obj.fnorm.shape
+                    print "obj.fuvs.shape = ", obj.fuvs.shape
+                    print "obj.group.shape = ", obj.group.shape
+                    print "obj.face_mask.shape = ", obj.face_mask.shape
+
+
+                    print "obj.group = ", obj.group
+
+                    group_0 = obj.group[obj.group==0]
+                    print "group_0.shape = ", group_0.shape
+
+                    if hasattr(obj,"face_mask"):
+                        false_mask_false = obj.face_mask[obj.face_mask == False]
+                        if hasattr(false_mask_false, "shape"):
+                            print "false_mask_false = ", false_mask_false.shape
+
+                        false_mask_true = obj.face_mask[obj.face_mask == True]
+                        if hasattr(false_mask_true, "shape"):
+                            print "false_mask_true = ", false_mask_true.shape
+
+                        if hasattr(obj,"group"):
+                            indexs= np.where(obj.face_mask == True)
+                            print "indexs =",indexs[0]
+                            True_Group = obj.group[indexs[0]]
+                            Group_id = np.unique(True_Group)
+                            print "true group id = ", True_Group
+
+            # obj.face_mask = True
 
 
     def onShow(self, event):

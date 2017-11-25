@@ -46,6 +46,5 @@ class Globals(object):
         self.windowHeight = 600
         self.windowWidth = 800
         self.clearColor = (0.0, 0.0, 0.0, 0.0)
-        self.ClothesTaskView = []
 
 G = Globals()

@@ -71,6 +71,8 @@ import log
 import wavefront
 from getpath import isSubPath, getPath
 
+
+
 def packStringList(strings):
     text = ''
     index = []
@@ -156,6 +158,51 @@ def loadBinaryMesh(obj, path):
     obj.updateIndexBuffer()
     #log.debug('loadBinaryMesh: built index buffer for rendering')
 
+
+
+def loadOBJMesh(obj, path):
+    log.debug("Loading binary mesh %s.", path)
+    #log.debug('loadBinaryMesh: np.load()')
+
+    npzfile = np.load(path)
+
+    if 'MAX_FACES' in npzfile:
+        # Set pole count if stored
+        obj.MAX_FACES = int(npzfile['MAX_FACES'][0])
+
+    #log.debug('loadBinaryMesh: loading arrays')
+    coord = npzfile['coord']
+    obj.setCoords(coord)
+
+    texco = npzfile['texco']
+    obj.setUVs(texco)
+
+    fvert = npzfile['fvert']
+    fuvs = npzfile['fuvs'] if 'fuvs' in npzfile.files else None
+    group = npzfile['group']
+    obj.setFaces(fvert, fuvs, group, skipUpdate=True)
+
+    obj.vface[:,:] = npzfile['vface'][:,:obj.MAX_FACES]
+    obj.nfaces = npzfile['nfaces']
+
+    #log.debug('loadBinaryMesh: loaded arrays')
+
+    fgstr = npzfile['fgstr']
+    fgidx = npzfile['fgidx']
+    for name in unpackStringList(fgstr, fgidx):
+        obj.createFaceGroup(name)
+    del fgstr, fgidx
+
+    #log.debug('loadBinaryMesh: unpacked facegroups')
+
+    obj.calcNormals()
+    #log.debug('loadBinaryMesh: calculated normals')
+
+    obj.updateIndexBuffer()
+    #log.debug('loadBinaryMesh: built index buffer for rendering')
+
+
+
 def loadTextMesh(obj, path):
     """
     Parse and load a Wavefront OBJ file as mesh.
@@ -204,15 +251,15 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
         except Exception as e:
             showTrace = not isinstance(e, RuntimeError)
             log.warning("Problem loading binary mesh: %s", e, exc_info=showTrace)
-            loadTextMesh(obj, path)
-            if isSubPath(npzpath, getPath('')):
-                # Only write compiled binary meshes to user data path
-                try:
-                    saveBinaryMesh(obj, npzpath)
-                except StandardError:
-                    log.notice('unable to save compiled mesh: %s', npzpath)
-            else:
-                log.debug('Not writing compiled meshes to system paths (%s).', npzpath)
+            # loadTextMesh(obj, path)
+            # if isSubPath(npzpath, getPath('')):
+            #     # Only write compiled binary meshes to user data path
+            #     try:
+            #         saveBinaryMesh(obj, npzpath)
+            #     except StandardError:
+            #         log.notice('unable to save compiled mesh: %s', npzpath)
+            # else:
+            #     log.debug('Not writing compiled meshes to system paths (%s).', npzpath)
     except:
         log.error('Unable to load obj file: %s', path, exc_info=True)
         return False

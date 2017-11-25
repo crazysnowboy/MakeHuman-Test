@@ -912,7 +912,7 @@ class Object3D(object):
         if self.tmap is None or len(self.tmap) == 0:
             return
         if self.utexc is True:
-            print "self.texco shape = ",self.texco.shape
+            # print "self.texco shape = ",self.texco.shape
             self.r_texco[...] = self.texco[self.tmap]
         else:
             self.r_texco[self.utexc[self.tmap]] = self.texco[self.tmap][self.utexc[self.tmap]]
@@ -932,54 +932,44 @@ class Object3D(object):
         if len(self.fuvs) > 0:
             print "-----crazylog-------self.fuvs = ", self.fuvs[0].shape
 
+
+
         print "-----crazylog-------self.group = ", len(self.group)
         if len(self.group) > 0:
-            print "-----crazylog-------self.group = ", self.group[0].shape
+            print "-----crazylog-------self.group = ", self.group
 
         print "-----crazylog-------self.face_mask = ", len(self.face_mask)
         if len(self.face_mask) > 0:
-            print "-----crazylog-------self.face_mask = ", self.face_mask[0].shape
+            print "-----crazylog-------self.face_mask = ", self.face_mask
 
 
-        print "-----crazylog-------self.texco = ",len(self.texco)
-        if len(self.texco)>0:
-            print "-----crazylog-------self.texco = ", self.texco[0].shape
-
-        print "-----crazylog-------self.coord = ",len(self.coord)
-        if len(self.coord) > 0:
-            print "-----crazylog-------self.coord = ", self.coord[0].shape
-
-        print "-----crazylog-------self.vnorm = ", len(self.vnorm)
-        if len(self.vnorm) > 0:
-            print "-----crazylog-------self.vnorm = ", self.vnorm[0].shape
-
-        print "-----crazylog-------self.vtang = ", len(self.vtang)
-        if len(self.vtang) > 0:
-            print "-----crazylog-------self.vtang = ", self.vtang[0].shape
-
-        print "-----crazylog-------self.color = ", len(self.color)
-        if len(self.color) > 0:
-            print "-----crazylog-------self.color = ", self.color[0].shape
-
-        print "-----crazylog-------self.vface = ", len(self.vface)
-        if len(self.vface) > 0:
-            print "-----crazylog-------self.vface = ", self.vface[0].shape
-
-
-
-        # self.fvert = []         # Reference to vertex attributes (coordinate, normal, color, tang) that form the faces (idx = face idx)
-        # self.fnorm = []         # Stores the face normal of the faces (idx = face idx)
-        # self.fuvs = []          # References to UVs at the verts of the faces (idx = face idx) (NOTE: UVs are not tied to vertex IDs, and are not necessarily uniform per vertex, like the other attributes!)
-        # self.group = []         # Determines facegroup per face (idx = face idx)
-        # self.face_mask = []     # Determines visibility per face (idx = face idx)
+        # print "-----crazylog-------self.texco = ",len(self.texco)
+        # if len(self.texco)>0:
+        #     print "-----crazylog-------self.texco = ", self.texco[0].shape
         #
-        # self.texco = []         # UV coordinates (idx = uv idx)
+        # print "-----crazylog-------self.coord = ",len(self.coord)
+        # if len(self.coord) > 0:
+        #     print "-----crazylog-------self.coord = ", self.coord[0].shape
         #
-        # self.coord = []         # Vertex coordinates (positions) (idx = vertex idx)
-        # self.vnorm = []         # Vertex normals (idx = vertex idx)
-        # self.vtang = []         # Vertex tangents (idx = vertex idx)
-        # self.color = []         # Vertex colors (idx = vertex idx)
-        # self.vface = []         # References the faces that a vertex belongs to (limited to MAX_FACES) (idx = vertex idx)
+        # print "-----crazylog-------self.vnorm = ", len(self.vnorm)
+        # if len(self.vnorm) > 0:
+        #     print "-----crazylog-------self.vnorm = ", self.vnorm[0].shape
+        #
+        # print "-----crazylog-------self.vtang = ", len(self.vtang)
+        # if len(self.vtang) > 0:
+        #     print "-----crazylog-------self.vtang = ", self.vtang[0].shape
+        #
+        # print "-----crazylog-------self.color = ", len(self.color)
+        # if len(self.color) > 0:
+        #     print "-----crazylog-------self.color = ", self.color[0].shape
+        #
+        # print "-----crazylog-------self.vface = ", len(self.vface)
+        # if len(self.vface) > 0:
+        #     print "-----crazylog-------self.vface = ", self.vface[0].shape
+
+
+
+
 
     def SaveObj(self):
 
