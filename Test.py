@@ -17,6 +17,53 @@ import wavefront
 from getpath import isSubPath, getPath
 
 
+def WriteOBJ( path, vertexs, vertex_normals =0,triangles=0, texture_coordinate=0, vertex_color=0, tri_index_offset=0):
+    print "write obj = ", path
+    c_i = 0  # vertex color index
+    with open(path, 'w') as test_txt:
+
+        if hasattr(texture_coordinate, 'shape'):
+            # line = 'mtllib texture_file.mtl\n'
+            # line = 'mtllib 3DMM.mtl\n'
+            # test_txt.write(line)
+            for r in range(0, texture_coordinate.shape[0]):
+                line = 'vt {} {}\n'.format(texture_coordinate[r, 0], texture_coordinate[r, 1])
+                test_txt.write(line)
+        if hasattr(vertexs, 'shape'):
+            # vertexs = vertexs.astype('int32')
+
+            for r in range(0, vertexs.shape[0]):
+                if hasattr(vertex_color, 'shape'):
+                    # With RGBA
+                    line = 'v {} {} {} {} {} {} {}\n'.format(vertexs[r, 0], vertexs[r, 1], vertexs[r, 2],
+                                                             vertex_color[c_i, 2], vertex_color[c_i, 1],
+                                                             vertex_color[c_i, 0], 255)
+                    c_i = c_i + 1
+                else:
+                    # Without RGBA
+                    line = 'v {} {} {}\n'.format(vertexs[r, 0], vertexs[r, 1], vertexs[r, 2])
+
+                if hasattr(vertex_normals, 'shape'):
+                    line = line + 'vn {} {} {}\n'.format(vertex_normals[r, 0], vertex_normals[r, 1], vertex_normals[r, 2])
+
+                test_txt.write(line)
+        if hasattr(triangles, 'shape'):
+            triangles = triangles.astype('int32')
+            for r in range(0, triangles.shape[0]):
+                triangles[r, :] = triangles[r, :] + tri_index_offset
+                line = 'f {}//{} {}//{} {}//{}\n'.format(triangles[r, 0], triangles[r, 0],
+                                                      triangles[r, 1], triangles[r, 1],
+                                                      triangles[r, 2], triangles[r, 2])  # if with texture coordinate
+                test_txt.write(line)
+                line = 'f {}//{} {}//{} {}//{}\n'.format(triangles[r, 0], triangles[r, 0],
+                                                      triangles[r, 2], triangles[r, 2],
+                                                      triangles[r, 3], triangles[r, 3])  # if with texture coordinate
+                test_txt.write(line)
+
+                # line = 'f {} {} {}\n'.format(triangles[r,0],triangles[r,1],triangles[r,2])
+                # test_txt.write(line)
+                # line = 'f {} {} {}\n'.format(triangles[r,0],triangles[r,2],triangles[r,3])
+                # test_txt.write(line)
 
 def ReadOBJ(file_path):
     OFF_file = open(file_path, 'r')
@@ -215,13 +262,46 @@ def ReadFileTest():
     #
     # print "length  = ",len(npzfile["fgstr"])
 
+def ReadFileSaveObj():
+    obj = module3d.Object3D("base.npz")
+    npzfile = loadBinaryMesh(obj,"/home/collin/Documents/MyProjects/FromGithub/makehuman/full-version/makehuman/data/3dobjs/base.npz")
+    print "obj = ",obj
+    print "obj.coord.shape = ", obj.coord.shape
+    print "obj.vnorm.shape = ", obj.vnorm.shape
+    print "obj.vtang.shape = ", obj.vtang.shape
+    print "obj.color.shape = ", obj.color.shape
+    print "obj.vface.shape = ", obj.vface.shape
+    print "obj.nfaces.shape = ", obj.nfaces.shape
+
+
+    print "obj.texco.shape = ", obj.texco.shape
+    print "obj.utexc.shape = ", obj.utexc
+
+
+    print "obj.fvert.shape = ", obj.fvert.shape
+    print "obj.fnorm.shape = ", obj.fnorm.shape
+    print "obj.fuvs.shape = ", obj.fuvs.shape
+    print "obj.group.shape = ", obj.group.shape
+    print "obj.face_mask.shape = ", obj.face_mask.shape
+
+    vertices = obj.coord
+    vertices_normals = obj.vnorm
+    uvs = obj.texco
+    colors = obj.color
+
+    triangles = obj.fvert[obj.group==0,:]
+
+    print "triangles.shape = ",triangles.shape
+
+    WriteOBJ("crazy_data/human.obj",vertices,vertices_normals,triangles,tri_index_offset=1)
+
+
+
 def Test1():
     if "good" in "bad boy is never been a good man":
         print "yes"
 
 
-
-
 if __name__ == '__main__':
-    Test1()
+    ReadFileSaveObj()
 
