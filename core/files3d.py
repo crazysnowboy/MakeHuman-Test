@@ -212,6 +212,15 @@ def loadTextMesh(obj, path):
     wavefront.loadObjFile(path, obj)
     #log.debug('loadTextMesh: end')
 
+
+def ReadLandmarksIndexs(files):
+    file = open(files, 'r')
+    lines = file.readlines()
+    for i in range(0, len(lines), 1):
+        lines[i] = int(lines[i].replace('\n', ''))
+    indexs = np.array(lines)
+    return indexs
+
 def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
     """
     This function loads the specified mesh object into internal MakeHuman data 
@@ -238,6 +247,9 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
         obj.MAX_FACES = maxFaces
 
     obj.path = path
+    selected_landmarks_ids = ReadLandmarksIndexs("selected_landmarks_index.txt")
+    selected_vertices_ids = ReadLandmarksIndexs("selected_vertices_index.txt")
+    landmarks_ids = selected_vertices_ids[selected_landmarks_ids]
 
     try:
         npzpath = os.path.splitext(path)[0] + '.npz'
@@ -256,9 +268,9 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
 
             # print "obj.coord[:,0].max(0) = ", obj.coord[:,0].max()
 
-            if obj.coord.shape[0] == 19158:
-                obj.coord[:,0] = obj.coord[:,0] + 0
-            obj.orig_coord = obj.coord.copy()
+            # if obj.coord.shape[0] == 19158:
+            #     obj.coord[landmarks_ids,2] = obj.coord[landmarks_ids,2] + 0.5
+            # obj.orig_coord = obj.coord.copy()
             # print "obj.coord[:,0].max(1) = ", obj.coord[:, 0].max()
 
 

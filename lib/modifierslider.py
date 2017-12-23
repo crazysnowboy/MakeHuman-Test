@@ -73,6 +73,8 @@ class ModifierSlider(gui.Slider):
         else:
             self.view = None
 
+        G.Mofiler.append(self)
+
 
     @staticmethod
     def findImage(name):
@@ -152,6 +154,10 @@ class ModifierSlider(gui.Slider):
         human = self.modifier.human
         if self.value is None:
             self.value = self.modifier.getValue()
+        print "crazylog self.modifier =", self.modifier
+        print "crazylog self.value =", self.value
+        print "crazylog value =", value
+        print "crazylog self.update =", self.update
         action = humanmodifier.ModifierAction(self.modifier, self.value, value, self.update)
         if self.value != value:
             G.app.do(action)
@@ -167,7 +173,32 @@ class ModifierSlider(gui.Slider):
                 human.getSeedMesh().setVisibility(0)
             human.getSubdivisionMesh(False).setVisibility(1)
         self.value = None
+    def my_onChange(self,value,human):
+        import humanmodifier
 
+        if self.value is None:
+            self.value = self.modifier.getValue()
+
+        print "crazylog self.modifier =", self.modifier
+        print "crazylog self.value =", self.value
+        print "crazylog value =", value
+        print "crazylog self.update =", self.update
+
+        action = humanmodifier.ModifierAction(self.modifier, self.value, value, self.update)
+        if self.value != value:
+            G.app.do(action)
+        else:
+            # Apply the change anyway, to make sure everything's updated
+            # Perform the action without adding it to the undo stack
+            action.do()
+
+        if human.isSubdivided():
+            if human.isProxied():
+                human.getProxyMesh().setVisibility(0)
+            else:
+                human.getSeedMesh().setVisibility(0)
+            human.getSubdivisionMesh(False).setVisibility(1)
+        self.value = None
     def onRelease(self, w):
         G.app.callAsync(self._onChange)
 

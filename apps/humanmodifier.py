@@ -114,6 +114,7 @@ class ModifierAction(guicommon.Action):
             # possibly involved
             self.before = self.modifier.resetValue()
         else:
+
             self.modifier.setValue(self.after)
 
         # Handle symmetry
