@@ -36,11 +36,10 @@ class CrazyTaskView(gui3d.TaskView):
             print " human.getWeight() = ",human.getWeight()
 
             for modifier_class in G.Mofiler:
-                print str(modifier_class.modifier.name)
-
-                # if 'head-fat' in str(modifier_class.modifier.name):
-                #     print "str(modifier_class.modifier.name) =",str(modifier_class.modifier.name)
-                #     modifier_class.my_onChange(0.1,human)
+                if 'head-fat' in str(modifier_class.modifier.name):
+                    modifier_class.my_onChange(0.1,human)
+                if 'head-age' in str(modifier_class.modifier.name):
+                    modifier_class.my_onChange(0.1, human)
 
 
 
