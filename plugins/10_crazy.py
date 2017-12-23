@@ -75,7 +75,9 @@ class CrazyTaskView(gui3d.TaskView):
             #
             # print "crazylog ----------------object3d = ",object3d
 
-            human.setWeight(200)
+            human.setWeight(0.5)
+
+            print "crazylog ----------------  human.getWeight() = ",human.getWeight()
             # pos = [10,10,10]
             # human.setPosition(pos)
 
@@ -101,6 +103,8 @@ class CrazyTaskView(gui3d.TaskView):
                 print "obj[",k,"] = ",obj, "name =",obj.name
 
                 if "base" in obj.name or "suit" in obj.name:
+
+                    print "obj.coord[:,0].max(0) = ", obj.coord[:, 0].max()
 
                     print "obj.coord.shape = ", obj.coord.shape
                     print "obj.vnorm.shape = ", obj.vnorm.shape

@@ -233,6 +233,7 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
     print "----crazylog------loadMesh--name= ",name,"path = ",path
     if obj is None:
         obj = module3d.Object3D(name)
+
     if maxFaces:
         obj.MAX_FACES = maxFaces
 
@@ -248,6 +249,22 @@ def loadMesh(path, loadColors=1, maxFaces=None, obj=None):
                 log.message('compiled file out of date: %s', npzpath)
                 raise RuntimeError('compiled file out of date: %s', npzpath)
             loadBinaryMesh(obj, npzpath)
+
+            print "crazylog---------------loadBinaryMesh--------------"
+
+            print "obj.coord.shape = ", obj.coord.shape
+
+            # print "obj.coord[:,0].max(0) = ", obj.coord[:,0].max()
+
+            if obj.coord.shape[0] == 19158:
+                obj.coord[:,0] = obj.coord[:,0] + 0
+            obj.orig_coord = obj.coord.copy()
+            # print "obj.coord[:,0].max(1) = ", obj.coord[:, 0].max()
+
+
+            print "obj.vnorm.shape = ", obj.vnorm.shape
+
+
         except Exception as e:
             showTrace = not isinstance(e, RuntimeError)
             log.warning("Problem loading binary mesh: %s", e, exc_info=showTrace)
